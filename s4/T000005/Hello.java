@@ -3,7 +3,7 @@ import java.lang.*;
 
 public class Hello {
     public static void main(String[] args) {
-        System.out.println("Github(B181835)");
+        System.out.println("merge(B181835)");
     }
 }
 
