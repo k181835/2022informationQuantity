@@ -84,15 +84,15 @@ public class Frequencer implements FrequencerInterface{
         //System.out.print(suffixArray[i]);
         //System.out.println(suffixArray[j]);
         //System.out.println(mySpace.length - Math.max(suffixArray[i],suffixArray[j]));
-        for(int k = 0; k < (mySpace.length - suffixArray[i]); k++) {
-        for(int k = 0; k < (mySpace.length - Math.max(suffixArray[i],suffixArray[j])); k++) {
+        //for(int k = 0; k < (mySpace.length - suffixArray[i]); k++) {
+        for(int k = 0; k < (mySpace.length - Math.max(i,j)); k++) {
             if(mySpace[i+k] > mySpace[j+k]) {return 1;
             } else if(mySpace[i+k] < mySpace[j+k]) {return -1;
             }
-        }/*
-        if (suffixArray[i] > suffixArray[j]) { return 1;
-        } else if (suffixArray[i] < suffixArray[j]) { return -1;
-        } */
+        }
+        if (i < j) { return 1;
+        } else if (i > j) { return -1;
+        } 
         return 0;
         /*
         String cmpi = new String(mySpace[i]);
@@ -305,6 +305,9 @@ public class Frequencer implements FrequencerInterface{
             frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("CBA".getBytes());
+            frequencerObject.printSuffixArray();
+            frequencerObject = new Frequencer();
+            frequencerObject.setSpace("HHH".getBytes());
             frequencerObject.printSuffixArray();
             frequencerObject = new Frequencer();
             frequencerObject.setSpace("Hi Ho Hi Ho".getBytes());
