@@ -28,7 +28,6 @@ public interface InformationEstimatorInterface{
 }
 */
 
-
 public class TestCase {
     static boolean success = true;
 
