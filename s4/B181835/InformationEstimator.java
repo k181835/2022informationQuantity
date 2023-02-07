@@ -2,6 +2,8 @@ package s4.B181835; // Please modify to s4.Bnnnnnn, where nnnnnn is your student
 import java.lang.*;
 import s4.specification.*;
 
+//B223312さんのプログラムを参考にしました。申し訳ありません。
+
 /* What is imported from s4.specification
 package s4.specification;
 public interface InformationEstimatorInterface {
@@ -57,7 +59,7 @@ public class InformationEstimator implements InformationEstimatorInterface {
     @Override
     public double estimation(){
         boolean [] partition = new boolean[myTarget.length+1];
-        double amount[];
+        double [] amount = new double[myTarget.length+1];
         int np = 1<<(myTarget.length-1);
         double value = Double.MAX_VALUE; // value = mininimum of each "value1". ここをまず何とかして拡散を阻止する
 	if(debugMode) { showVariables(); }
@@ -79,22 +81,33 @@ public class InformationEstimator implements InformationEstimatorInterface {
             double value1 = (double) 0.0;
             int end = 0;
             int start = end;
+/*
             while(start<myTarget.length) {
                 // System.out.write(myTarget[end]);
-                end++;;
+                end++;
                 while(partition[end] == false) {
                     // System.out.write(myTarget[end]);
                     end++;
                 }
                 // System.out.print("("+start+","+end+")");
-                myFrequencer.setTarget(subBytes(myTarget, start, end));
-                value1 = value1 + iq(myFrequencer.frequency());
+                myFrequencer.setTarget(myTarget, start, end);
+                value1 = value1 + iq(myFrequencer.frequency());//データ量の計算
                 start = end;
-            }
+            }/*
+            amount[0] = 0;
+            amount[amount.length] = iq(myFrequencer.frequency());
+            for(start = 0; start < myTarget.length; start++) {
+                for(end = start + 1; end <= myTarget.length; end++) {
+                    myFrequencer.setTarget(subByte(myTarget, start, end));
+                    value1 = amount[end] + iq(myFrequencer.frequency());
+ 
+                    amount[end] = Math.min(amount[end],value1);
+                }
+            }*/       
             // System.out.println(" "+ value1);
 
             // Get the minimal value in "value"
-            if(value1 < value) value = value1;
+            if(value1 < value) value = value1;//min
         }
 	if(debugMode) { System.out.printf("%10.5f\n", value); }
         return value;
