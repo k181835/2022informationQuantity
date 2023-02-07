@@ -58,59 +58,28 @@ public class InformationEstimator implements InformationEstimatorInterface {
 
     @Override
     public double estimation(){
-        boolean [] partition = new boolean[myTarget.length+1];
-        double [] amount = new double[myTarget.length+1];
-        int np = 1<<(myTarget.length-1);
-        double value = Double.MAX_VALUE; // value = mininimum of each "value1". ここをまず何とかして拡散を阻止する
-	if(debugMode) { showVariables(); }
-        if(debugMode) { System.out.printf("np=%d length=%d ", np, +myTarget.length); }
-
-        for(int p=0; p<np; p++) { // There are 2^(n-1) kinds of partitions.
-            // binary representation of p forms partition.
-            // for partition {"ab" "cde" "fg"}
-            // a b c d e f g   : myTarget
-            // T F T F F T F T : partition:
-            partition[0] = true; // I know that this is not needed, but..
-            for(int i=0; i<myTarget.length -1;i++) {
-                partition[i+1] = (0 !=((1<<i) & p));
-            }
-            partition[myTarget.length] = true;
-
+        int mTl = myTarget.length;
+        int mSl = mySpace.length;
+        double [] amount = new double[mTl+1];
+        double value = Double.MAX_VALUE; // value = mininimum of each "value1". ここをまず何とかして拡散を阻止
             // Compute Information Quantity for the partition, in "value1"
             // value1 = IQ(#"ab")+IQ(#"cde")+IQ(#"fg") for the above example
-            double value1 = (double) 0.0;
-            int end = 0;
-            int start = end;
-/*
-            while(start<myTarget.length) {
-                // System.out.write(myTarget[end]);
-                end++;
-                while(partition[end] == false) {
-                    // System.out.write(myTarget[end]);
-                    end++;
-                }
-                // System.out.print("("+start+","+end+")");
-                myFrequencer.setTarget(myTarget, start, end);
-                value1 = value1 + iq(myFrequencer.frequency());//データ量の計算
-                start = end;
-            }/*
-            amount[0] = 0;
-            amount[amount.length] = iq(myFrequencer.frequency());
-            for(start = 0; start < myTarget.length; start++) {
-                for(end = start + 1; end <= myTarget.length; end++) {
-                    myFrequencer.setTarget(subByte(myTarget, start, end));
-                    value1 = amount[end] + iq(myFrequencer.frequency());
- 
-                    amount[end] = Math.min(amount[end],value1);
-                }
-            }*/       
-            // System.out.println(" "+ value1);
+        if (myTarget == null || mTl == 0) return 0.0;
+        if (mySpace == null || mSl == 0) return value;
 
-            // Get the minimal value in "value"
-            if(value1 < value) value = value1;//min
+        amount[0] = 0;
+            
+        for(int start = 0; start < mTl; start++) amount[start] = value;
+
+        for(int start = 0; start < mTl; start++) {
+            for(int end = start + 1; end <= mTl; end++) {
+                myFrequencer.setTarget(subBytes(myTarget, start, end));
+                double value1 = amount[start] + iq(myFrequencer.frequency());
+ 
+                amount[end] = Math.min(amount[end],value1);
+            }
         }
-	if(debugMode) { System.out.printf("%10.5f\n", value); }
-        return value;
+        return amount[mTl];
     }
 
     public static void main(String[] args) {
