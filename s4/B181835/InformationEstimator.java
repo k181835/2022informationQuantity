@@ -60,16 +60,15 @@ public class InformationEstimator implements InformationEstimatorInterface {
     public double estimation(){
         int mTl = myTarget.length;
         int mSl = mySpace.length;
-        double [] amount = new double[mTl+1];
+        double[] amount = new double[mTl+1];
         double value = Double.MAX_VALUE; // value = mininimum of each "value1". ここをまず何とかして拡散を阻止
-            // Compute Information Quantity for the partition, in "value1"
-            // value1 = IQ(#"ab")+IQ(#"cde")+IQ(#"fg") for the above example
+
         if (myTarget == null || mTl == 0) return 0.0;
         if (mySpace == null || mSl == 0) return value;
 
         amount[0] = 0;
             
-        for(int start = 0; start < mTl; start++) amount[start] = value;
+        for(int start = 1; start <= mTl; start++) amount[start] = value;
 
         for(int start = 0; start < mTl; start++) {
             for(int end = start + 1; end <= mTl; end++) {
